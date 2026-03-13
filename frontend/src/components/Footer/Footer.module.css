@@ -1,0 +1,102 @@
+.footer {
+  background-color: var(--color-bg-dark);
+  color: var(--color-bg-light);
+  padding-top: var(--space-6);
+  margin-top: auto;
+}
+
+.footerContent {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .footerContent {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+.footerBrand .logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: var(--space-2);
+}
+
+.logoIcon {
+  color: var(--color-primary);
+  fill: var(--color-primary);
+}
+
+.brandDescription {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  max-width: 300px;
+}
+
+.footerLinks h4, .footerSocial h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+  color: white;
+}
+
+.footerLinks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.footerLinks a {
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
+  font-size: 0.95rem;
+}
+
+.footerLinks a:hover {
+  color: var(--color-primary);
+}
+
+.socialIcons {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.socialIcons a {
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.socialIcons a:hover {
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.contactEmail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-secondary);
+}
+
+.contactEmail a {
+  transition: color var(--transition-fast);
+}
+
+.contactEmail a:hover {
+  color: var(--color-primary);
+}
+
+.footerBottom {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: var(--space-3) 0;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}

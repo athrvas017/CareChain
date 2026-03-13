@@ -1,0 +1,120 @@
+.carouselContainer {
+  position: relative;
+  overflow: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.slidesWrapper {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  padding: var(--space-4) var(--space-2);
+}
+
+.testimonialCard {
+  padding: var(--space-6);
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quoteIcon {
+  color: var(--color-primary);
+  opacity: 0.2;
+  margin-bottom: var(--space-3);
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.quoteText {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  font-style: italic;
+  margin-bottom: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.authorImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-primary);
+}
+
+.authorName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  text-align: left;
+}
+
+.authorRole {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-align: left;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.controlBtn {
+  background: white;
+  color: var(--color-text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.controlBtn:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.indicators {
+  display: flex;
+  gap: 8px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0; /* Reset button padding */
+  transition: all var(--transition-fast);
+}
+
+.activeIndicator {
+  background: var(--color-primary);
+  transform: scale(1.3);
+}

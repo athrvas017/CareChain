@@ -1,0 +1,233 @@
+.hero {
+  padding: var(--space-6) 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,111,97,0.1) 0%, rgba(255,255,255,0) 70%);
+  z-index: -1;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -5%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, rgba(255,255,255,0) 70%);
+  z-index: -1;
+}
+
+.heroContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  position: relative;
+}
+
+@media (min-width: 992px) {
+  .heroContainer {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.content {
+  flex: 1;
+  max-width: 600px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.title {
+  font-size: 3rem;
+  line-height: 1.1;
+  margin-bottom: var(--space-3);
+  color: var(--color-bg-dark);
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 4rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.btnLarge {
+  padding: 12px 28px;
+  font-size: 1.125rem;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.statIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 111, 97, 0.1);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.statDivider {
+  height: 40px;
+  width: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .statDivider {
+    display: block;
+  }
+}
+
+.imageWrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageBackground {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 90%;
+  background: var(--gradient-primary);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  z-index: -1;
+  opacity: 0.1;
+  animation: morph 8s ease-in-out infinite alternate;
+}
+
+@keyframes morph {
+  0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+  100% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+}
+
+.heroImage {
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 1;
+}
+
+.floatingCard {
+  position: absolute;
+  bottom: 20px;
+  left: -20px;
+  padding: var(--space-2);
+  z-index: 2;
+  max-width: 250px;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+@media (max-width: 768px) {
+  .floatingCard {
+    left: 20px;
+    bottom: -20px;
+  }
+}
+
+.floatingCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-success);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.verifiedIcon {
+  fill: var(--color-success);
+}
+
+.floatingCardContent {
+  font-size: 0.875rem;
+}
+
+.floatingCardContent strong {
+  display: block;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.floatingCardContent p {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  margin: 0;
+}

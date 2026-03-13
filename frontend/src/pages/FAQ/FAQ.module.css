@@ -1,0 +1,124 @@
+.faqPage { min-height: 100vh; }
+
+.hero {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  padding: 80px 0 60px;
+  color: white;
+  text-align: center;
+}
+
+.heroContent { text-align: center; }
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 111, 97, 0.15);
+  color: #ff9f97;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 111, 97, 0.3);
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+.heroContactLink {
+  color: #ff9f97;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.heroContactLink:hover { color: white; }
+
+.heroExtra {
+  display: flex;
+  justify-content: center;
+}
+
+.faqContent {
+  padding: 64px 0;
+  max-width: 800px;
+}
+
+.faqSection {
+  margin-bottom: 48px;
+}
+
+.faqCategory {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faqItem {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  background: white;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.faqItem:hover {
+  border-color: #cbd5e1;
+}
+
+.faqItemOpen {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.08);
+}
+
+.faqQuestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.975rem;
+  font-weight: 600;
+  color: #0f172a;
+  gap: 16px;
+  transition: color 0.2s;
+}
+
+.faqItemOpen .faqQuestion {
+  color: var(--color-primary);
+}
+
+.faqAnswer {
+  padding: 0 24px 20px;
+  color: #475569;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+}

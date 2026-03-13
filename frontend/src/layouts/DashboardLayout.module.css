@@ -1,0 +1,247 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg-light);
+}
+
+.sidebar {
+  width: 280px;
+  background-color: var(--color-card-bg);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  transition: transform var(--transition-normal);
+}
+
+.sidebarHeader {
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.logoIcon {
+  color: var(--color-primary);
+  fill: var(--color-primary);
+}
+
+.closeBtn {
+  display: none;
+  color: var(--color-text-secondary);
+}
+
+.sidebarNav {
+  padding: var(--space-2);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow-y: auto;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.navItem:hover {
+  background-color: rgba(255, 111, 97, 0.05);
+  color: var(--color-primary);
+}
+
+.navItem.active {
+  background-color: rgba(255, 111, 97, 0.1);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.createBtn {
+  margin-top: var(--space-2);
+  background: var(--gradient-primary);
+  color: white !important;
+}
+
+.createBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.sidebarFooter {
+  padding: var(--space-3);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.homeLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  font-size: 0.875rem;
+}
+
+.homeLink:hover {
+  color: var(--color-primary);
+  background-color: rgba(255, 111, 97, 0.05);
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2);
+  color: var(--color-danger);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.logoutBtn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.mainWrapper {
+  flex-grow: 1;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 70px;
+  background-color: var(--color-card-bg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-3);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.menuBtn {
+  display: none;
+  color: var(--color-text-primary);
+}
+
+.topbarCenter {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.campaignQuickLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: rgba(255, 111, 97, 0.08);
+  color: var(--color-primary);
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.campaignQuickLink:hover {
+  background: rgba(255, 111, 97, 0.15);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.userRole {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.mainContent {
+  padding: var(--space-4);
+  flex-grow: 1;
+  overflow-x: hidden;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  display: none;
+}
+
+/* Mobile Styles */
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .closeBtn {
+    display: block;
+  }
+
+  .mainWrapper {
+    margin-left: 0;
+  }
+
+  .menuBtn {
+    display: block;
+  }
+
+  .overlay {
+    display: block;
+  }
+}

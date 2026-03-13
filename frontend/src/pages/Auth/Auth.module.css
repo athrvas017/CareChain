@@ -1,0 +1,460 @@
+/* ============================================
+   AUTH PAGE — Premium Redesigned Styles
+   ============================================ */
+
+.authContainer {
+  min-height: 100vh;
+  display: flex;
+  background-color: #f8fafc;
+}
+
+.authLayout {
+  display: flex;
+  width: 100%;
+  flex-direction: column-reverse;
+}
+
+@media (min-width: 992px) {
+  .authLayout {
+    flex-direction: row;
+  }
+}
+
+/* ---- Illustration Side ---- */
+.illustrationSide {
+  display: none;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+@media (min-width: 992px) {
+  .illustrationSide {
+    display: flex;
+    align-items: flex-end;
+  }
+}
+
+.illustrationImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(10, 15, 40, 0.85) 0%,
+    rgba(220, 70, 50, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+.illustrationContent {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding: 48px;
+  width: 100%;
+}
+
+.brandBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.3px;
+}
+
+.illustrationTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+.illustrationText {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.85;
+  margin-bottom: 32px;
+  max-width: 400px;
+}
+
+.illustrationStats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.illustrationStat {
+  display: flex;
+  flex-direction: column;
+}
+
+.illustrationStatValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.illustrationStatLabel {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.illustrationStatDivider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.trustItems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* ---- Form Side ---- */
+.formSide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+  background: white;
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 480px;
+}
+
+.mobileBrand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.5rem;
+  justify-content: center;
+}
+
+@media (min-width: 992px) {
+  .mobileBrand {
+    display: none;
+  }
+}
+
+.brandIconMobile {
+  color: var(--color-primary);
+}
+
+.formHeader {
+  margin-bottom: 32px;
+}
+
+.formTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.formSubtitle {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* ---- Form Elements ---- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgotPasswordLink {
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.input {
+  width: 100%;
+  padding: 13px 14px 13px 44px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.975rem;
+  color: #0f172a;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: #94a3b8;
+}
+
+.input:focus {
+  background: white;
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 111, 97, 0.08);
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 14px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.passwordToggle:hover {
+  color: var(--color-primary);
+}
+
+/* ---- Submit Button ---- */
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #ff6f61, #e63946);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 15px rgba(255, 111, 97, 0.3);
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 111, 97, 0.4);
+}
+
+.submitBtn:active {
+  transform: translateY(0);
+}
+
+.submitBtn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.loadingDots span {
+  animation: blink 1.2s infinite;
+}
+.loadingDots span:nth-child(2) { animation-delay: 0.2s; }
+.loadingDots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+/* ---- Divider ---- */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  margin: 4px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+/* ---- Quick Login Grid ---- */
+.quickLoginGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.quickLoginBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quickLoginBtn:hover {
+  border-color: var(--color-primary);
+  background: rgba(255, 111, 97, 0.04);
+  color: var(--color-primary);
+}
+
+.quickLoginIcon {
+  font-size: 1rem;
+}
+
+/* ---- Role Cards (Register) ---- */
+.roleGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roleCard {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.roleCard:hover {
+  border-color: var(--color-primary);
+  background: rgba(255, 111, 97, 0.03);
+}
+
+.roleCardActive {
+  border-color: var(--color-primary);
+  background: rgba(255, 111, 97, 0.05);
+  box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.1);
+}
+
+.roleEmoji {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.roleLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: block;
+}
+
+.roleDesc {
+  font-size: 0.775rem;
+  color: #64748b;
+  display: block;
+  margin-top: 2px;
+}
+
+.roleCheck {
+  position: absolute;
+  right: 14px;
+  color: var(--color-primary);
+}
+
+/* ---- Terms text ---- */
+.termsText {
+  font-size: 0.775rem;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: -8px;
+}
+
+.termsText a {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* ---- Footer ---- */
+.formFooter {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.formFooter a {
+  color: var(--color-primary);
+  font-weight: 700;
+}
