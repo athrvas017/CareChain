@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Activity, Users, ArrowRight } from 'lucide-react';
 import HeroSection from '../../components/HeroSection/HeroSection';
 import CampaignCard from '../../components/CampaignCard/CampaignCard';
 import TestimonialCarousel from '../../components/TestimonialCarousel/TestimonialCarousel';
 import ImpactGraph from '../../components/ImpactGraph/ImpactGraph';
-import { dummyCampaigns, platformStats } from '../../utils/dummyData';
+import { platformStats } from '../../utils/dummyData';
+import api from '../../utils/api';
 import styles from './Home.module.css';
 
 const Home = () => {
-  // Get 3 featured campaigns
-  const featuredCampaigns = dummyCampaigns.slice(0, 3);
+  const [featuredCampaigns, setFeaturedCampaigns] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const response = await api.get('/campaigns/');
+        // Get first 3 campaigns as featured
+        setFeaturedCampaigns(response.data.slice(0, 3));
+      } catch (error) {
+        console.error('Error fetching featured campaigns:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchFeatured();
+  }, []);
 
   return (
     <div className={styles.home}>
@@ -48,7 +64,7 @@ const Home = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className={styles.howItWorks}>
+      <section id="how-it-works" className={styles.howItWorks}>
         <div className="container">
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>How CareChain Works</h2>
@@ -99,9 +115,15 @@ const Home = () => {
         </div>
         
         <div className={styles.campaignGrid}>
-          {featuredCampaigns.map(campaign => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
-          ))}
+          {isLoading ? (
+            <div className="loading-spinner">Loading featured campaigns...</div>
+          ) : featuredCampaigns.length > 0 ? (
+            featuredCampaigns.map(campaign => (
+              <CampaignCard key={campaign.id} campaign={campaign} />
+            ))
+          ) : (
+            <p>No campaigns available at the moment.</p>
+          )}
         </div>
       </section>
 
@@ -160,7 +182,7 @@ const Home = () => {
             <Link to="/register" className="btn-primary" style={{padding: '16px 32px', fontSize: '1.125rem'}}>
               Start Donating
             </Link>
-            <Link to="/create-campaign" className="btn-secondary" style={{padding: '16px 32px', fontSize: '1.125rem'}}>
+            <Link to="/request-aid" className="btn-secondary" style={{padding: '16px 32px', fontSize: '1.125rem'}}>
               Create a Campaign
             </Link>
           </div>

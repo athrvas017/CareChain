@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import { Target, Upload, FileText } from 'lucide-react';
-import styles from '../Dashboard/Dashboard.module.css';
+import { useNavigate } from 'react-router-dom';
+import { Target, Upload, FileText, Plus } from 'lucide-react';
+import api from '../../utils/api';
+import styles from './CreateCampaign.module.css';
 
 const CreateCampaign = () => {
   const [formData, setFormData] = useState({
     title: '',
     category: 'Medical',
-    targetAmount: '',
+    goal_amount: '',
     description: '',
     milestones: [{ title: '', target: '' }]
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const addMilestone = () => {
     setFormData({
@@ -18,92 +22,129 @@ const CreateCampaign = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleMilestoneChange = (index, field, value) => {
+    const newMilestones = [...formData.milestones];
+    newMilestones[index][field] = value;
+    setFormData({ ...formData, milestones: newMilestones });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Campaign proposal submitted for verification into the blockchain.");
+    setIsLoading(true);
+    try {
+      await api.post('/campaigns/', {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        goal_amount: parseFloat(formData.goal_amount)
+      });
+      alert("Campaign proposal submitted successfully!");
+      navigate('/dashboard/beneficiary');
+    } catch (error) {
+      console.error('Error creating campaign:', error);
+      alert('Failed to create campaign. Please make sure you are logged in as a beneficiary.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className={styles.dashboard} style={{maxWidth: '800px'}}>
+    <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Start a Campaign</h1>
-        <p className={styles.subtitle}>Create a transparent, milestone-based funding request.</p>
+        <p className={styles.subtitle}>Create a transparent, milestone-based funding request for your cause.</p>
       </header>
 
-      <div className={`glass-card ${styles.card}`}>
-        <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-4)'}}>
+      <div className={styles.formCard}>
+        <form onSubmit={handleSubmit}>
           
-          <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-            <label style={{fontWeight: 600}}>Campaign Title</label>
+          <div className="form-group">
+            <label className="form-label">Campaign Title</label>
             <input 
               type="text" 
               required 
-              style={{padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(0,0,0,0.1)', width: '100%'}} 
+              className="form-input"
               placeholder="E.g., Clean Water Initiative"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
           </div>
 
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)'}}>
-             <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-              <label style={{fontWeight: 600}}>Category</label>
-              <select style={{padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(0,0,0,0.1)', width: '100%'}}>
+          <div className={styles.grid}>
+            <div className="form-group">
+              <label className="form-label">Category</label>
+              <select 
+                className="form-input"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              >
                 <option>Medical</option>
                 <option>Education</option>
                 <option>Disaster Relief</option>
                 <option>Food & Hunger</option>
               </select>
             </div>
-            <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-              <label style={{fontWeight: 600}}>Target Amount (₹)</label>
+            <div className="form-group">
+              <label className="form-label">Target Amount (₹)</label>
               <input 
                 type="number" 
                 required 
-                style={{padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(0,0,0,0.1)', width: '100%'}} 
+                className="form-input"
                 placeholder="100000"
+                value={formData.goal_amount}
+                onChange={(e) => setFormData({ ...formData, goal_amount: e.target.value })}
               />
             </div>
           </div>
 
-          <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-            <label style={{fontWeight: 600}}>Campaign Story & Description</label>
+          <div className="form-group">
+            <label className="form-label">Campaign Story & Description</label>
             <textarea 
               rows="5"
               required
-              style={{padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(0,0,0,0.1)', width: '100%', resize: 'vertical'}}
+              className="form-input"
               placeholder="Explain why you are raising funds and how they will be used..."
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             ></textarea>
           </div>
 
-          <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-             <label style={{fontWeight: 600}}>Cover Image</label>
-             <div className={styles.uploadArea}>
-               <Upload color="var(--color-primary)" />
-               <p>Click to browse or drag and drop</p>
-             </div>
+          <div className="form-group">
+            <label className="form-label">Cover Image</label>
+            <div className={styles.uploadArea}>
+              <Upload size={32} />
+              <p>Click to browse or drag and drop</p>
+              <span style={{fontSize: '0.75rem', opacity: 0.6}}>Max size: 5MB (JPG, PNG)</span>
+            </div>
           </div>
 
-          {/* Milestones */}
-          <div style={{borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: 'var(--space-4)'}}>
-            <h3 style={{marginBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: '8px'}}>
-              <Target size={20} color="var(--color-primary)" /> Funding Milestones
+          <div className={styles.milestoneSection}>
+            <h3 className={styles.milestoneHeader}>
+              <Target size={24} color="var(--color-primary)" /> Funding Milestones
             </h3>
-            <p style={{fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
-              Define specific goals. Funds are locked in smart contracts and released when field workers verify these milestones.
+            <p className={styles.milestoneDesc}>
+              Define specific impact goals. Funds are locked and released when field workers verify these milestones on-ground.
             </p>
 
             {formData.milestones.map((m, idx) => (
-              <div key={idx} style={{display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-2)'}}>
+              <div key={idx} className={styles.milestoneRow}>
                 <input 
                   type="text" 
-                  placeholder={`Milestone ${idx+1} Description`} 
-                  style={{flex: 2, padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(0,0,0,0.1)'}} 
+                  placeholder={`Milestone ${idx+1} Description (e.g. Purchase 100 filters)`} 
+                  className="form-input"
+                  style={{flex: 1}}
                   required
+                  value={m.title}
+                  onChange={(e) => handleMilestoneChange(idx, 'title', e.target.value)}
                 />
                 <input 
                   type="number" 
-                  placeholder="% of Funds to Release" 
-                  style={{flex: 1, padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(0,0,0,0.1)'}} 
+                  placeholder="% Fund" 
+                  className="form-input"
+                  style={{width: '100px'}}
                   required
+                  value={m.target}
+                  onChange={(e) => handleMilestoneChange(idx, 'target', e.target.value)}
                 />
               </div>
             ))}
@@ -111,15 +152,20 @@ const CreateCampaign = () => {
             <button 
               type="button" 
               className="btn-secondary" 
+              style={{padding: '8px 16px', fontSize: '0.875rem'}}
               onClick={addMilestone}
-              style={{marginTop: 'var(--space-2)'}}
             >
-              + Add Milestone
+              <Plus size={14} /> Add Milestone
             </button>
           </div>
 
-          <button type="submit" className="btn-primary" style={{padding: '16px', fontSize: '1.125rem', marginTop: 'var(--space-2)'}}>
-            Submit for Blockchain Verification
+          <button 
+            type="submit" 
+            className="btn-primary"
+            style={{width: '100%', marginTop: '32px'}}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Submitting...' : 'Submit for Verification'}
           </button>
         </form>
       </div>

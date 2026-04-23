@@ -4,10 +4,8 @@ import { Heart, Target, Users, CheckCircle, Award, Globe, ArrowRight } from 'luc
 import styles from './About.module.css';
 
 const TEAM = [
-  { name: 'Ananya Sharma', role: 'Founder & CEO', emoji: '👩‍💼', desc: 'Ex-NGO director with 10 years in social impact.' },
-  { name: 'Rohan Verma', role: 'CTO', emoji: '👨‍💻', desc: 'Full-stack engineer passionate about civic tech.' },
-  { name: 'Priya Iyer', role: 'Head of Operations', emoji: '👩‍🔬', desc: 'Logistics expert ensuring aid reaches the last mile.' },
-  { name: 'Karan Mehta', role: 'Field Verification Lead', emoji: '🌍', desc: 'Coordinates our nationwide network of field workers.' },
+  { name: 'Athrva Sarade', role: 'Frontend', emoji: '👨‍💻', desc: 'SY B.Tech Computer Engineering student.' },
+  { name: 'Siyam Bubure', role: 'Backend', emoji: '👨‍💻', desc: 'SY B.Tech Computer Engineering student.' }
 ];
 
 const VALUES = [

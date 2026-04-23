@@ -9,8 +9,16 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Mock auth state
-  const isAuthenticated = false;
+  // Real auth state from localStorage
+  const user = JSON.parse(localStorage.getItem('user'));
+  const isAuthenticated = !!localStorage.getItem('token');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
+    window.location.href = '/login';
+  };
 
   const isActive = (path) => location.pathname === path ? styles.active : '';
 
@@ -40,7 +48,10 @@ const Navbar = () => {
 
           <div className={styles.authButtons}>
             {isAuthenticated ? (
-              <Link to="/dashboard" className="btn-primary">Dashboard</Link>
+              <>
+                <Link to={`/dashboard/${user?.role}`} className="btn-secondary">Dashboard</Link>
+                <button onClick={handleLogout} className="btn-primary">Logout</button>
+              </>
             ) : (
               <>
                 <Link to="/login" className="btn-secondary">Login</Link>
@@ -73,7 +84,10 @@ const Navbar = () => {
 
             <div className={styles.mobileAuthButtons}>
               {isAuthenticated ? (
-                <Link to="/dashboard" className="btn-primary" style={{ textAlign: 'center' }} onClick={toggleMenu}>Dashboard</Link>
+                <>
+                  <Link to={`/dashboard/${user?.role}`} className="btn-secondary" style={{ textAlign: 'center', marginBottom: '8px' }} onClick={toggleMenu}>Dashboard</Link>
+                  <button onClick={handleLogout} className="btn-primary" style={{ width: '100%' }}>Logout</button>
+                </>
               ) : (
                 <>
                   <Link to="/login" className="btn-secondary" style={{ textAlign: 'center', marginBottom: '8px' }} onClick={toggleMenu}>Login</Link>

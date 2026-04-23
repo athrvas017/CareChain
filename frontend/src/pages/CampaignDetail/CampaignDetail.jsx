@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Target, Users, MapPin, Calendar, ExternalLink, Download } from 'lucide-react';
 import CampaignProgressBar from '../../components/CampaignProgressBar/CampaignProgressBar';
 import VerificationBadge from '../../components/VerificationBadge/VerificationBadge';
-import { dummyCampaigns } from '../../utils/dummyData';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { calculateProgress } from '../../utils/calculateProgress';
 import styles from './CampaignDetail.module.css';
+import api from '../../utils/api';
 
-// Mock Milestone Component
+const milestones = [
+  { title: 'Project Initiation', description: 'Setup and community outreach.', completed: true },
+  { title: 'Resource Gathering', description: 'Securing necessary supplies and equipment.', completed: false },
+  { title: 'Execution Phase 1', description: 'First round of aid distribution.', completed: false },
+];
+
+const verificationReports = [
+  { id: 1, title: 'Initial Needs Assessment', date: '2024-03-10', auditor: 'CareChain Field Team' },
+  { id: 2, title: 'Financial Pre-Audit', date: '2024-03-15', auditor: 'Blockchain Ledger' },
+];
+
 const MilestoneTracker = ({ milestones }) => {
+  if (!milestones || milestones.length === 0) return <p>No milestones added yet.</p>;
   return (
     <div className={styles.milestoneTracker}>
       {milestones.map((milestone, index) => (
@@ -21,7 +32,7 @@ const MilestoneTracker = ({ milestones }) => {
           <div className={styles.milestoneContent}>
             <h4>{milestone.title}</h4>
             <p>{milestone.description}</p>
-            {milestone.completed && <span className={styles.milestoneDate}>Completed: {milestone.date}</span>}
+            {milestone.completed && <span className={styles.milestoneDate}>Completed</span>}
           </div>
         </div>
       ))}
@@ -31,36 +42,44 @@ const MilestoneTracker = ({ milestones }) => {
 
 const CampaignDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [donationAmount, setDonationAmount] = useState('');
+  const [campaign, setCampaign] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Find campaign or use first one as fallback for demo
-  const campaign = dummyCampaigns.find(c => c.id === parseInt(id)) || dummyCampaigns[0];
-  const progress = calculateProgress(campaign.collectedAmount, campaign.targetAmount);
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      try {
+        const response = await api.get(`/campaigns/${id}`);
+        setCampaign(response.data);
+      } catch (error) {
+        console.error('Error fetching campaign details:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCampaign();
+  }, [id]);
 
-  // Mock data for detail view
-  const milestones = [
-    { title: "Campaign Launched", description: "Initial setup and verification completed.", completed: true, date: "12 Mar 2026" },
-    { title: "25% Funding Reached", description: "First batch of supplies ordered.", completed: true, date: "15 Mar 2026" },
-    { title: "50% Funding Reached", description: "Distribution to 500 families.", completed: false, date: "" },
-    { title: "100% Target Met", description: "Final distribution and project closure report.", completed: false, date: "" }
-  ];
+  if (isLoading) return <div className="container">Loading campaign details...</div>;
+  if (!campaign) return <div className="container">Campaign not found.</div>;
 
-  const verificationReports = [
-    { id: 1, title: "Initial Site Assessment", date: "10 Mar 2026", auditor: "NGO Watchdog" },
-    { id: 2, title: "First Fund Release Audit", date: "16 Mar 2026", auditor: "CareChain Validator #492" }
-  ];
+  const progress = calculateProgress(campaign.raised_amount || 0, campaign.goal_amount || 1);
 
   const handleDonate = (e) => {
     e.preventDefault();
-    alert(`Initiating smart contract for donation of ${formatCurrency(donationAmount)}`);
-    setDonationAmount('');
+    if (!donationAmount || donationAmount < 100) {
+      alert("Please enter a minimum donation of ₹100");
+      return;
+    }
+    navigate(`/donate/${id}`, { state: { initialAmount: parseFloat(donationAmount) } });
   };
 
   return (
     <div className={`container ${styles.detailPage}`}>
       {/* Banner */}
       <div className={styles.bannerWrapper}>
-        <img src={campaign.image} alt={campaign.title} className={styles.bannerImage} />
+        <img src={campaign.image || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200'} alt={campaign.title} className={styles.bannerImage} />
         <div className={styles.categoryTag}>{campaign.category}</div>
       </div>
 
@@ -70,12 +89,12 @@ const CampaignDetail = () => {
           <div className={styles.headerInfo}>
             <div className={styles.titleWrapper}>
               <h1 className={styles.title}>{campaign.title}</h1>
-              {campaign.isVerified && <VerificationBadge />}
+              {(campaign.status === 'approved' || campaign.is_verified) && <VerificationBadge />}
             </div>
             
             <div className={styles.metaInfo}>
               <span className={styles.metaItem}><MapPin size={16} /> Global</span>
-              <span className={styles.metaItem}><Calendar size={16} /> Created: Mar 2026</span>
+              <span className={styles.metaItem}><Calendar size={16} /> Created: {new Date().toLocaleDateString()}</span>
             </div>
           </div>
 
@@ -116,10 +135,10 @@ const CampaignDetail = () => {
           <div className={`glass-card ${styles.donationWidget}`}>
             <div className={styles.fundingStatus}>
               <div className={styles.amountRaised}>
-                {formatCurrency(campaign.collectedAmount)}
+                {formatCurrency(campaign.raised_amount || 0)}
               </div>
               <div className={styles.amountTarget}>
-                raised of <span>{formatCurrency(campaign.targetAmount)}</span> goal
+                raised of <span>{formatCurrency(campaign.goal_amount || 0)}</span> goal
               </div>
               
               <div className={styles.progressWrapper}>
@@ -132,7 +151,7 @@ const CampaignDetail = () => {
                 </div>
                 <div className={styles.stat}>
                   <Users size={14} className={styles.statIcon} />
-                  {campaign.donorsCount} Donors
+                  {campaign.donors_count || 0} Donors
                 </div>
               </div>
             </div>

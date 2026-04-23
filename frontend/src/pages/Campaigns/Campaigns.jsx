@@ -1,22 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter } from 'lucide-react';
 import CampaignCard from '../../components/CampaignCard/CampaignCard';
-import { dummyCampaigns } from '../../utils/dummyData';
+import api from '../../utils/api';
 import styles from './Campaigns.module.css';
 
 const Campaigns = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [campaigns, setCampaigns] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        const response = await api.get('/campaigns/');
+        setCampaigns(response.data);
+      } catch (error) {
+        console.error('Error fetching campaigns:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCampaigns();
+  }, []);
 
   const categories = ['All', 'Disaster Relief', 'Medical', 'Education', 'Food & Hunger'];
   const statuses = ['All', 'Active', 'Completed'];
 
-  const filteredCampaigns = dummyCampaigns.filter(campaign => {
+  const filteredCampaigns = campaigns.filter(campaign => {
     const matchesSearch = campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           campaign.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'All' || campaign.category === categoryFilter;
-    const matchesStatus = statusFilter === 'All' || campaign.status === statusFilter;
+    const matchesStatus = statusFilter === 'All' || (
+      (statusFilter === 'Active' && (campaign.status === 'active' || campaign.status === 'approved')) ||
+      (statusFilter === 'Completed' && campaign.status === 'completed')
+    );
     
     return matchesSearch && matchesCategory && matchesStatus;
   });

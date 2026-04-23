@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Heart,
   LayoutDashboard,
@@ -14,17 +14,37 @@ import {
 } from 'lucide-react';
 import styles from './DashboardLayout.module.css';
 
-const DashboardLayout = ({ role = 'donor' }) => {
+const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  
+  // 🔐 Protected Route Logic
+  const token = localStorage.getItem('token');
+  const userStr = localStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const role = user?.role || 'donor';
+
+  useEffect(() => {
+    if (!token || !user) {
+      navigate('/login');
+    }
+  }, [token, user, navigate]);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  // Common links that appear for every role
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
+    navigate('/login');
+  };
+
+  // Common links
   const commonLinks = [
-    { path: '/dashboard', label: 'Overview', icon: <LayoutDashboard size={20} /> },
-    { path: '/campaigns', label: 'Campaigns', icon: <Search size={20} /> },
-    { path: '/profile', label: 'Profile Settings', icon: <Settings size={20} /> },
+    { path: `/dashboard/${role}`, label: 'Overview', icon: <LayoutDashboard size={20} /> },
+    { path: '/campaigns', label: 'Explore', icon: <Search size={20} /> },
+    { path: '/profile', label: 'Settings', icon: <Settings size={20} /> },
   ];
 
   const getNavLinks = () => {
@@ -32,28 +52,29 @@ const DashboardLayout = ({ role = 'donor' }) => {
       case 'admin':
         return [
           ...commonLinks,
-          { path: '/dashboard/campaigns', label: 'Manage Campaigns', icon: <Briefcase size={20} /> },
-          { path: '/dashboard/verifications', label: 'Pending Verifications', icon: <Clock size={20} /> },
-        ];
-      case 'field_worker':
-        return [
-          ...commonLinks,
-          { path: '/dashboard/tasks', label: 'My Tasks', icon: <Clock size={20} /> },
+          // Removed duplicate /dashboard/admin link
         ];
       case 'beneficiary':
         return [
           ...commonLinks,
+          { path: '/request-aid', label: 'Request Aid', icon: <PlusCircle size={20} /> },
+          { path: '/create-campaign', label: 'New Campaign', icon: <Briefcase size={20} /> },
+        ];
+      case 'field_worker':
+        return [
+          ...commonLinks,
+          // Field worker dashboard already in commonLinks
         ];
       case 'donor':
       default:
         return [
           ...commonLinks,
-          { path: '/dashboard/history', label: 'Donation History', icon: <Clock size={20} /> },
+          // Removed duplicate /dashboard/donor link
         ];
     }
   };
 
-  const navLinks = getNavLinks();
+  if (!token || !user) return null;
 
   return (
     <div className={styles.layout}>
@@ -70,7 +91,7 @@ const DashboardLayout = ({ role = 'donor' }) => {
         </div>
 
         <nav className={styles.sidebarNav}>
-          {navLinks.map((link) => (
+          {getNavLinks().map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -80,21 +101,10 @@ const DashboardLayout = ({ role = 'donor' }) => {
               <span>{link.label}</span>
             </Link>
           ))}
-
-          {role === 'admin' && (
-            <Link to="/create-campaign" className={`${styles.navItem} ${styles.createBtn}`}>
-              <PlusCircle size={20} />
-              <span>New Campaign</span>
-            </Link>
-          )}
         </nav>
 
         <div className={styles.sidebarFooter}>
-          <Link to="/" className={styles.homeLink}>
-            <Heart size={18} />
-            <span>Back to Site</span>
-          </Link>
-          <button className={styles.logoutBtn}>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
             <LogOut size={20} />
             <span>Logout</span>
           </button>
@@ -108,10 +118,7 @@ const DashboardLayout = ({ role = 'donor' }) => {
             <Menu size={24} />
           </button>
           <div className={styles.topbarCenter}>
-            <Link to="/campaigns" className={styles.campaignQuickLink}>
-              <Search size={16} />
-              Explore Campaigns
-            </Link>
+            <span className={styles.welcomeText}>Hello, {user.name}</span>
           </div>
           <div className={styles.userInfo}>
             <div className={styles.avatar}>

@@ -1,24 +1,41 @@
-import React from 'react';
-import { Download, Clock, CheckCircle, TrendingUp, Heart } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Download, CheckCircle, TrendingUp, Heart } from 'lucide-react';
 import ImpactGraph from '../../components/ImpactGraph/ImpactGraph';
 import CampaignCard from '../../components/CampaignCard/CampaignCard';
-import { dummyCampaigns } from '../../utils/dummyData';
 import { formatCurrency } from '../../utils/formatCurrency';
 import styles from './Dashboard.module.css';
+import api from '../../utils/api';
 
 const DashboardDonor = () => {
-  const recentDonations = [
-    { id: 1, campaign: "Flood Relief Assam", amount: 5000, date: "12 Mar 2026", status: "Verified" },
-    { id: 2, campaign: "Education for Rural Children", amount: 2500, date: "10 Mar 2026", status: "Verified" },
-    { id: 3, campaign: "Food Drive for Homeless", amount: 1000, date: "05 Mar 2026", status: "Verified" },
-  ];
+  const [recentDonations, setRecentDonations] = useState([]);
+  const [recommendedCampaigns, setRecommendedCampaigns] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-  const recommendedCampaigns = dummyCampaigns.slice(1, 4);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [donationsRes, campaignsRes] = await Promise.all([
+          api.get('/donations/me'),
+          api.get('/campaigns/')
+        ]);
+        setRecentDonations(donationsRes.data);
+        setRecommendedCampaigns(campaignsRes.data.slice(0, 3));
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const totalDonated = recentDonations.reduce((acc, curr) => acc + curr.amount, 0);
 
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Welcome back, Donor!</h1>
+        <h1 className={styles.title}>Welcome back, {user.name || 'Donor'}!</h1>
         <p className={styles.subtitle}>Here is your verifiable impact at a glance.</p>
       </header>
 
@@ -30,7 +47,7 @@ const DashboardDonor = () => {
           </div>
           <div className={styles.statInfo}>
             <p className={styles.statLabel}>Total Donated</p>
-            <h3 className={styles.statValue}>{formatCurrency(8500)}</h3>
+            <h3 className={styles.statValue}>{formatCurrency(totalDonated)}</h3>
           </div>
         </div>
         <div className={`glass-card ${styles.statCard}`}>
@@ -39,7 +56,7 @@ const DashboardDonor = () => {
           </div>
           <div className={styles.statInfo}>
             <p className={styles.statLabel}>Campaigns Supported</p>
-            <h3 className={styles.statValue}>3</h3>
+            <h3 className={styles.statValue}>{recentDonations.length}</h3>
           </div>
         </div>
         <div className={`glass-card ${styles.statCard}`}>
@@ -79,24 +96,31 @@ const DashboardDonor = () => {
             <h2 className={styles.sectionTitle}>Recent Donations</h2>
             
             <div className={styles.historyList}>
-              {recentDonations.map(donation => (
-                <div key={donation.id} className={styles.historyItem}>
-                  <div className={styles.historyIcon}>
-                    <Heart size={16} />
+              {recentDonations.length > 0 ? (
+                recentDonations.map(donation => (
+                  <div key={donation.id} className={styles.historyItem}>
+                    <div className={styles.historyIcon}>
+                      <Heart size={16} />
+                    </div>
+                    <div className={styles.historyContent}>
+                      <p className={styles.historyCampaign}>{donation.campaign_title || `Campaign #${donation.campaign_id}`}</p>
+                      <p className={styles.historyDate}>{new Date(donation.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div className={styles.historyAmountWrapper}>
+                      <p className={styles.historyAmount}>{formatCurrency(donation.amount)}</p>
+                      <span className={styles.statusBadge}>Verified</span>
+                    </div>
                   </div>
-                  <div className={styles.historyContent}>
-                    <p className={styles.historyCampaign}>{donation.campaign}</p>
-                    <p className={styles.historyDate}>{donation.date}</p>
-                  </div>
-                  <div className={styles.historyAmountWrapper}>
-                    <p className={styles.historyAmount}>{formatCurrency(donation.amount)}</p>
-                    <span className={styles.statusBadge}>{donation.status}</span>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p>No donations yet.</p>
+              )}
             </div>
 
-            <button className={`btn-secondary ${styles.fullWidthBtn}`}>
+            <button 
+              className={`btn-secondary ${styles.fullWidthBtn}`}
+              onClick={() => alert('Tax receipt generation in progress. You will be notified via email once ready.')}
+            >
               <Download size={16} /> Download Tax Receipt
             </button>
           </div>

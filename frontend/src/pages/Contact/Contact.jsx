@@ -49,8 +49,8 @@ const Contact = () => {
               <MapPin size={24} />
             </div>
             <h3>Visit Us</h3>
-            <p>CareChain HQ, Koramangala</p>
-            <p>Bengaluru, Karnataka 560034</p>
+            <p>VJTI Matunga</p>
+            <p>Mumbai Maharashtra</p>
           </div>
         </div>
 

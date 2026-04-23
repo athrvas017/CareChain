@@ -27,9 +27,9 @@ const HeroSection = () => {
             <Link to="/campaigns" className={`btn-primary ${styles.btnLarge}`}>
               Explore Campaigns
             </Link>
-            <Link to="/how-it-works" className={`btn-secondary ${styles.btnLarge}`}>
+            <a href="#how-it-works" className={`btn-secondary ${styles.btnLarge}`}>
               How It Works
-            </Link>
+            </a>
           </div>
           
           <div className={styles.stats}>

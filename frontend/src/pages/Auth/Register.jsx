@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Heart, Eye, EyeOff, Lock, Mail, User, Shield, ArrowRight, CheckCircle } from 'lucide-react';
 import styles from './Auth.module.css';
 
+import api from '../../utils/api';
+
 const ROLES = [
   {
     id: 'donor',
@@ -27,16 +29,43 @@ const ROLES = [
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState('donor');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    registration_id: '',
+    id_reference: ''
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
+    setError('');
+
+    try {
+      const response = await api.post('/auth/register', {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        role: role,
+        // Optional fields based on role
+        registration_id: role === 'field_worker' ? formData.registration_id : null,
+        id_reference: role === 'beneficiary' ? formData.id_reference : null
+      });
+
+      // After registration, redirect to login or auto-login
+      // For now, let's redirect to login with a success message state
+      alert('Registration successful! Please login.');
       setIsLoading(false);
-      navigate(`/dashboard/${role}`);
-    }, 1000);
+      navigate('/login');
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -76,7 +105,9 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className={styles.inputGroup}>
+                {error && <div className={styles.errorBanner}>{error}</div>}
+
+                <div className={styles.inputGroup}>
                 <label className={styles.label}>Full Name {role === 'field_worker' ? '/ Organization Name' : ''}</label>
                 <div className={styles.inputWrapper}>
                   <User size={18} className={styles.inputIcon} />
@@ -85,6 +116,8 @@ const Register = () => {
                     required
                     placeholder={role === 'field_worker' ? 'WaterLife NGO' : 'John Doe'}
                     className={styles.input}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   />
                 </div>
               </div>
@@ -93,7 +126,14 @@ const Register = () => {
                 <label className={styles.label}>Email Address</label>
                 <div className={styles.inputWrapper}>
                   <Mail size={18} className={styles.inputIcon} />
-                  <input type="email" required placeholder="you@example.com" className={styles.input} />
+                  <input
+                    type="email"
+                    required
+                    placeholder="you@example.com"
+                    className={styles.input}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
                 </div>
               </div>
 
@@ -106,6 +146,8 @@ const Register = () => {
                     required
                     placeholder="Min. 8 characters"
                     className={styles.input}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   />
                   <button
                     type="button"
@@ -123,7 +165,14 @@ const Register = () => {
                   <label className={styles.label}>NGO Registration ID</label>
                   <div className={styles.inputWrapper}>
                     <Shield size={18} className={styles.inputIcon} />
-                    <input type="text" required placeholder="Ex: NGO-2026-X123" className={styles.input} />
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ex: NGO-2026-X123"
+                      className={styles.input}
+                      value={formData.registration_id}
+                      onChange={(e) => setFormData({ ...formData, registration_id: e.target.value })}
+                    />
                   </div>
                 </div>
               )}
@@ -133,7 +182,13 @@ const Register = () => {
                   <label className={styles.label}>Aadhar or ID Reference (Optional)</label>
                   <div className={styles.inputWrapper}>
                     <User size={18} className={styles.inputIcon} />
-                    <input type="text" placeholder="For faster verification" className={styles.input} />
+                    <input
+                      type="text"
+                      placeholder="For faster verification"
+                      className={styles.input}
+                      value={formData.id_reference}
+                      onChange={(e) => setFormData({ ...formData, id_reference: e.target.value })}
+                    />
                   </div>
                 </div>
               )}

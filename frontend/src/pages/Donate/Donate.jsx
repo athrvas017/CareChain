@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { Heart, CreditCard, Smartphone, Building, ArrowRight, CheckCircle, Shield } from 'lucide-react';
-import { dummyCampaigns } from '../../utils/dummyData';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { calculateProgress } from '../../utils/calculateProgress';
 import styles from './Donate.module.css';
+import api from '../../utils/api';
 
 const PRESET_AMOUNTS = [500, 1000, 2500, 5000, 10000];
 const PAYMENT_METHODS = [
@@ -17,20 +16,60 @@ const PAYMENT_METHODS = [
 const Donate = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const campaign = dummyCampaigns.find((c) => c.id === parseInt(id)) || dummyCampaigns[0];
-  const [amount, setAmount] = useState(1000);
+  const location = useLocation();
+  
+  const [campaign, setCampaign] = useState(null);
+  const [amount, setAmount] = useState(location.state?.initialAmount || 1000);
   const [customAmount, setCustomAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [donated, setDonated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      try {
+        const response = await api.get(`/campaigns/${id}`);
+        setCampaign(response.data);
+      } catch (err) {
+        console.error('Error fetching campaign:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCampaign();
+  }, [id]);
 
   const finalAmount = customAmount ? parseInt(customAmount) : amount;
-  const progress = calculateProgress(campaign.collectedAmount, campaign.targetAmount);
 
-  const handleDonate = (e) => {
+  const handleDonate = async (e) => {
     e.preventDefault();
-    setDonated(true);
-    setTimeout(() => navigate('/dashboard/donor'), 2500);
+    setIsSubmitting(true);
+    try {
+      // Mocking transaction ID for the demo, but connecting to real DB
+      const transactionId = `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      
+      await api.post('/donations/', {
+        campaign_id: parseInt(id),
+        amount: parseFloat(finalAmount),
+        transaction_id: transactionId,
+        category: campaign.category,
+        city: 'Mumbai', // Mock location for demo
+      });
+      
+      setDonated(true);
+    } catch (err) {
+      console.error('Donation failed:', err);
+      alert('Failed to process donation. Please make sure you are logged in.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (isLoading) return <div className="container">Loading campaign details...</div>;
+  if (!campaign) return <div className="container">Campaign not found.</div>;
+
+  const progress = calculateProgress(campaign.raised_amount, campaign.goal_amount);
 
   if (donated) {
     return (
@@ -41,7 +80,7 @@ const Donate = () => {
           </div>
           <h1>Thank You! 🎉</h1>
           <p>Your donation of <strong>{formatCurrency(finalAmount)}</strong> to <strong>{campaign.title}</strong> has been received.</p>
-          <p className={styles.successSub}>A tax receipt will be sent to your registered email within 24 hours.</p>
+          <p className={styles.successSub}>Your contribution is now being tracked on the blockchain for full transparency.</p>
           <div className={styles.successActions}>
             <Link to="/dashboard/donor" className="btn-primary">Go to Dashboard</Link>
             <Link to="/campaigns" className="btn-secondary">Browse More Campaigns</Link>
@@ -56,25 +95,24 @@ const Donate = () => {
       <div className={styles.donateGrid}>
         {/* Campaign Info */}
         <div className={styles.campaignPane}>
-          <img src={campaign.image} alt={campaign.title} className={styles.campaignImage} />
+          <img src={campaign.image || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200'} alt={campaign.title} className={styles.campaignImage} />
           <div className={styles.campaignInfo}>
             <span className={styles.campaignCategory}>{campaign.category}</span>
             <h2 className={styles.campaignTitle}>{campaign.title}</h2>
-            <p className={styles.campaignDesc}>{campaign.description}</p>
             <div className={styles.progressRow}>
               <div className={styles.progressBar}>
                 <div className={styles.progressFill} style={{ width: `${progress}%` }}></div>
               </div>
               <div className={styles.progressStats}>
-                <span className={styles.raised}>{formatCurrency(campaign.collectedAmount)} raised</span>
-                <span className={styles.target}>of {formatCurrency(campaign.targetAmount)}</span>
+                <span className={styles.raised}>{formatCurrency(campaign.raised_amount)} raised</span>
+                <span className={styles.target}>of {formatCurrency(campaign.goal_amount)}</span>
               </div>
             </div>
             <div className={styles.campaignMeta}>
-              <span><Heart size={14} /> {campaign.donorsCount} donors</span>
-              <span><Shield size={14} /> {campaign.isVerified ? 'Verified Campaign' : 'Pending Verification'}</span>
+               <span><Shield size={14} /> Verified Platform</span>
+               <span><Heart size={14} /> Direct Impact</span>
             </div>
-            <Link to="/campaigns" className={styles.backLink}>← Browse all campaigns</Link>
+            <Link to={`/campaigns/${id}`} className={styles.backLink}>← Back to Story</Link>
           </div>
         </div>
 
@@ -105,7 +143,7 @@ const Donate = () => {
                   placeholder="Enter custom amount"
                   value={customAmount}
                   onChange={(e) => setCustomAmount(e.target.value)}
-                  min="10"
+                  min="100"
                   className={styles.customInput}
                 />
               </div>
@@ -127,67 +165,17 @@ const Donate = () => {
               </div>
             </div>
 
-            {paymentMethod === 'upi' && (
-              <div className={styles.inputGroup}>
-                <label>UPI ID</label>
-                <input type="text" placeholder="yourname@upi" className={styles.inputField} />
-              </div>
-            )}
-
-            {paymentMethod === 'card' && (
-              <>
-                <div className={styles.inputGroup}>
-                  <label>Card Number</label>
-                  <input type="text" placeholder="1234 5678 9012 3456" className={styles.inputField} maxLength={19} />
-                </div>
-                <div className={styles.cardRow}>
-                  <div className={styles.inputGroup}>
-                    <label>Expiry</label>
-                    <input type="text" placeholder="MM/YY" className={styles.inputField} maxLength={5} />
-                  </div>
-                  <div className={styles.inputGroup}>
-                    <label>CVV</label>
-                    <input type="password" placeholder="•••" className={styles.inputField} maxLength={3} />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {paymentMethod === 'netbanking' && (
-              <div className={styles.inputGroup}>
-                <label>Select Bank</label>
-                <select className={styles.inputField}>
-                  <option>SBI</option>
-                  <option>HDFC Bank</option>
-                  <option>ICICI Bank</option>
-                  <option>Axis Bank</option>
-                  <option>Kotak Bank</option>
-                </select>
-              </div>
-            )}
-
-            <div className={styles.summaryBox}>
-              <div className={styles.summaryRow}>
-                <span>Donation Amount</span>
-                <span>{formatCurrency(finalAmount || 0)}</span>
-              </div>
-              <div className={styles.summaryRow}>
-                <span>Platform Fee</span>
-                <span className={styles.free}>Free</span>
-              </div>
-              <div className={`${styles.summaryRow} ${styles.summaryTotal}`}>
-                <span>Total</span>
-                <span>{formatCurrency(finalAmount || 0)}</span>
-              </div>
-            </div>
-
-            <button type="submit" className={styles.donateBtn} disabled={!finalAmount || finalAmount < 10}>
-              Donate {finalAmount ? formatCurrency(finalAmount) : ''} <ArrowRight size={18} />
+            <button 
+              type="submit" 
+              className={styles.donateBtn} 
+              disabled={isSubmitting || !finalAmount || finalAmount < 100}
+            >
+              {isSubmitting ? 'Processing...' : `Donate ${formatCurrency(finalAmount)}`} <ArrowRight size={18} />
             </button>
 
             <div className={styles.securityNote}>
               <Shield size={14} />
-              <span>100% secure. 80G tax receipt included.</span>
+              <span>100% secure blockchain transaction guaranteed.</span>
             </div>
           </form>
         </div>

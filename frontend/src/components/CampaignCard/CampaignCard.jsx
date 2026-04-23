@@ -8,17 +8,16 @@ import { calculateProgress } from '../../utils/calculateProgress';
 import styles from './CampaignCard.module.css';
 
 const CampaignCard = ({ campaign }) => {
-  const {
-    id,
-    title,
-    category,
-    targetAmount,
-    collectedAmount,
-    image,
-    description,
-    isVerified,
-    donorsCount
-  } = campaign;
+  // Map backend snake_case fields to frontend camelCase or provide fallbacks
+  const id = campaign.id;
+  const title = campaign.title;
+  const category = campaign.category;
+  const targetAmount = campaign.target_amount || campaign.goal_amount || campaign.targetAmount || 0;
+  const collectedAmount = campaign.collected_amount || campaign.raised_amount || campaign.collectedAmount || 0;
+  const image = campaign.image || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800';
+  const description = campaign.description;
+  const isVerified = (campaign.status === 'approved') || campaign.is_verified || campaign.isVerified;
+  const donorsCount = campaign.donors_count || campaign.donorsCount || 0;
 
   const progress = calculateProgress(collectedAmount, targetAmount);
 

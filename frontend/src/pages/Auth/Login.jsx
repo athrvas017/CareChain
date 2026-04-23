@@ -3,24 +3,46 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Heart, Eye, EyeOff, Lock, Mail, ArrowRight } from 'lucide-react';
 import styles from './Auth.module.css';
 
+import api from '../../utils/api';
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate login based on email content
-    setTimeout(() => {
-      let role = 'donor';
-      if (formData.email.includes('admin')) role = 'admin';
-      if (formData.email.includes('field')) role = 'field_worker';
-      if (formData.email.includes('ben')) role = 'beneficiary';
+    setError('');
+
+    try {
+      // API expects OAuth2 form data: username and password
+      const params = new URLSearchParams();
+      params.append('username', formData.email);
+      params.append('password', formData.password);
+
+      const response = await api.post('/auth/login', params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+
+      const { access_token, user } = response.data;
+      
+      // Store auth state
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('role', user.role);
+
       setIsLoading(false);
-      navigate(`/dashboard/${role}`);
-    }, 1000);
+      navigate(`/dashboard/${user.role}`);
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.response?.data?.detail || 'Invalid email or password');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -126,23 +148,22 @@ const Login = () => {
               </button>
             </form>
 
-            <div className={styles.divider}>
-              <span>or continue as</span>
-            </div>
-
-            <div className={styles.quickLoginGrid}>
-              <button className={styles.quickLoginBtn} onClick={() => navigate('/dashboard/donor')}>
-                <span className={styles.quickLoginIcon}>💚</span> Donor
-              </button>
-              <button className={styles.quickLoginBtn} onClick={() => navigate('/dashboard/admin')}>
-                <span className={styles.quickLoginIcon}>🛡️</span> Admin
-              </button>
-              <button className={styles.quickLoginBtn} onClick={() => navigate('/dashboard/field_worker')}>
-                <span className={styles.quickLoginIcon}>🌍</span> Field Worker
-              </button>
-              <button className={styles.quickLoginBtn} onClick={() => navigate('/dashboard/beneficiary')}>
-                <span className={styles.quickLoginIcon}>🤝</span> Beneficiary
-              </button>
+            <div className={styles.fastLoginContainer}>
+              <p className={styles.fastLoginLabel}>Quick Test Accounts</p>
+              <div className={styles.fastLoginGrid}>
+                <button className={styles.fastBtn} onClick={() => setFormData({email: 'admin@carechain.com', password: 'password123'})}>
+                   <span className={styles.fastBtnTitle}>Admin</span>
+                </button>
+                <button className={styles.fastBtn} onClick={() => setFormData({email: 'donor@gmail.com', password: 'password123'})}>
+                   <span className={styles.fastBtnTitle}>Donor</span>
+                </button>
+                <button className={styles.fastBtn} onClick={() => setFormData({email: 'beneficiary@gmail.com', password: 'password123'})}>
+                   <span className={styles.fastBtnTitle}>Beneficiary</span>
+                </button>
+                <button className={styles.fastBtn} onClick={() => setFormData({email: 'worker@carechain.com', password: 'password123'})}>
+                   <span className={styles.fastBtnTitle}>Field Worker</span>
+                </button>
+              </div>
             </div>
 
             <div className={styles.formFooter}>

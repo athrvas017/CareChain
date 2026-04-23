@@ -1,16 +1,32 @@
-import React from 'react';
-import { Camera, MapPin, CheckCircle, Clock, Upload } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Camera, MapPin, CheckCircle, Clock, Upload, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import api from '../../utils/api';
 import styles from './Dashboard.module.css';
 
 const DashboardFieldWorker = () => {
-  const assignedTasks = [
-    { id: "TSK-01", campaign: "Education for Rural Children", task: "Verify School Construction Milestone 1", location: "District A, State", deadline: "18 Mar 2026", status: "Pending" },
-    { id: "TSK-02", campaign: "Flood Relief Assam", task: "Verify Distribution of 500 Food Packets", location: "Kamrup, Assam", deadline: "15 Mar 2026", status: "Needs Updates" }
-  ];
+  const [assignedTasks, setAssignedTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const res = await api.get('/campaigns/assigned');
+        setAssignedTasks(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTasks();
+  }, []);
 
   const completedTasks = [
     { id: "TSK-00", campaign: "Cancer Treatment Support", task: "Hospital Invoice Verification", date: "10 Mar 2026", status: "Approved" }
   ];
+
+  if (loading) return <div className="loading-spinner">Loading tasks...</div>;
 
   return (
     <div className={styles.dashboard}>
@@ -28,27 +44,33 @@ const DashboardFieldWorker = () => {
             </div>
             
             <div className={styles.taskList}>
-              {assignedTasks.map(task => (
+              {assignedTasks.length > 0 ? assignedTasks.map(task => (
                 <div key={task.id} className={`glass-card ${styles.taskCard}`}>
                   <div className={styles.taskHeader}>
-                    <span className={styles.taskId}>{task.id}</span>
-                    <span className={`${styles.statusBadge} ${task.status === 'Pending' ? styles.badgeWarning : styles.badgeDanger}`}>
-                      {task.status}
+                    <span className={styles.taskId}>CMP-{task.id}</span>
+                    <span className={`${styles.statusBadge} ${styles.badgeWarning}`}>
+                      {task.status.toUpperCase()}
                     </span>
                   </div>
-                  <h3 className={styles.taskTitle}>{task.campaign}</h3>
-                  <p className={styles.taskDesc}>{task.task}</p>
+                  <h3 className={styles.taskTitle}>{task.title}</h3>
+                  <p className={styles.taskDesc}>{task.description.substring(0, 100)}...</p>
                   
                   <div className={styles.taskMeta}>
-                    <div className={styles.metaItem}><MapPin size={14} /> {task.location}</div>
-                    <div className={styles.metaItem}><Clock size={14} /> Due: {task.deadline}</div>
+                    <div className={styles.metaItem}><MapPin size={14} /> Location: Verified by NGO</div>
+                    <div className={styles.metaItem}><Clock size={14} /> Created: {new Date(task.created_at).toLocaleDateString()}</div>
                   </div>
                   
                   <div className={styles.taskActions}>
-                    <button className={`btn-primary ${styles.fullWidthBtn}`}>Start Verification Report</button>
+                    <Link to={`/verify/${task.id}`} className={`btn-primary ${styles.fullWidthBtn}`}>
+                       Start Verification Report
+                    </Link>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className={`glass-card ${styles.card}`}>
+                   <p>No campaigns assigned for verification yet.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
