@@ -98,7 +98,8 @@ def predict_hotspots(db: Session):
             "Nashik": {"lat": 19.9975, "lng": 73.7898},
             "Thane": {"lat": 19.2183, "lng": 72.9781},
             "Aurangabad": {"lat": 19.8762, "lng": 75.3433},
-            "Solapur": {"lat": 17.6599, "lng": 75.9064}
+            "Solapur": {"lat": 17.6599, "lng": 75.9064},
+            "Satara": {"lat": 17.6805, "lng": 73.9915}
         }
         
         city_name = getattr(c, 'city', "Mumbai") or "Mumbai"

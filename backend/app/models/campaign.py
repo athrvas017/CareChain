@@ -9,6 +9,7 @@ class Campaign(Base):
     title = Column(String, nullable=False)
     description = Column(Text)
     category = Column(String)
+    city = Column(String, nullable=True)
 
     goal_amount = Column(Float, nullable=False)
     raised_amount = Column(Float, default=0)

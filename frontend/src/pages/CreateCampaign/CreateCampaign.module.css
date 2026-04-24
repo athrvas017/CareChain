@@ -25,12 +25,11 @@
 }
 
 .formCard {
-  background: var(--surface);
-  border: 1px solid var(--glass-border);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 20px;
   padding: 40px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
 }
 
 .formSection {

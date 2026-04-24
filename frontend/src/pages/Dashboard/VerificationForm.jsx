@@ -52,93 +52,91 @@ const VerificationForm = () => {
 
     return (
         <div className={styles.dashboard}>
-                <div className={`glass-card ${styles.card}`} style={{padding: '48px', borderTop: '8px solid var(--color-primary)'}}>
-                    <header style={{marginBottom: '40px', textAlign: 'center'}}>
-                        <div style={{background: 'rgba(249, 115, 22, 0.1)', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyCenter: 'center', margin: '0 auto 24px'}}>
-                            <ShieldCheck size={40} color="var(--color-primary)" />
+                <div className={`glass-card ${styles.formCard}`}>
+                    <header className={styles.formHeader}>
+                        <div style={{background: 'rgba(249, 115, 22, 0.1)', width: '88px', height: '88px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px'}}>
+                            <ShieldCheck size={44} color="var(--color-primary)" />
                         </div>
-                        <h1 style={{fontSize: '2.25rem', marginBottom: '8px', color: 'var(--color-text-primary)'}}>On-Ground Audit</h1>
-                        <p style={{color: 'var(--color-text-secondary)', fontWeight: 500}}>Project Verification for: <span style={{color: 'var(--color-primary)'}}>{campaign?.title}</span></p>
+                        <h1 style={{fontSize: '2.5rem', marginBottom: '12px', letterSpacing: '-0.02em'}}>On-Ground Audit</h1>
+                        <p style={{color: 'var(--color-text-secondary)', fontSize: '1.1rem'}}>
+                            Project: <strong style={{color: 'var(--color-text-primary)'}}>{campaign?.title}</strong>
+                        </p>
                     </header>
 
-                    <form onSubmit={handleSubmit} className={styles.form} style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
-                        <div className="form-group">
-                            <label className="form-label" style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                <ShieldCheck size={18} /> Verdict Status
+                    <form onSubmit={handleSubmit}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>
+                                <ShieldCheck size={18} /> Audit Verdict
                             </label>
                             <select 
-                                className="form-input"
+                                className={styles.formInput}
                                 value={formData.status}
                                 onChange={e => setFormData({...formData, status: e.target.value})}
-                                style={{background: 'var(--color-bg-light)', border: '2px solid rgba(0,0,0,0.05)'}}
                             >
-                                <option value="verified">✅ Fully Verified (Project Authenticity Confirmed)</option>
+                                <option value="verified">✅ Verified (Project Authenticity Confirmed)</option>
                                 <option value="flagged">⚠️ Flagged (Minor discrepancies - Review Required)</option>
-                                <option value="rejected">❌ Rejected (Suspected fraud or site mismatch)</option>
+                                <option value="rejected">❌ Rejected (Suspected fraud or mismatch)</option>
                             </select>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label" style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                <FileText size={18} /> On-Ground Findings
+                        <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>
+                                <FileText size={18} /> Detailed Findings
                             </label>
                             <textarea 
-                                className="form-input"
-                                rows="6"
+                                className={styles.formInput}
                                 required
                                 placeholder="Describe beneficiary interviews, physical site checks, and document verification details..."
                                 value={formData.findings}
                                 onChange={e => setFormData({...formData, findings: e.target.value})}
-                                style={{background: 'var(--color-bg-light)', border: '2px solid rgba(0,0,0,0.05)'}}
                             ></textarea>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">Key Recommendation</label>
+                        <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>Recommendation</label>
                             <input 
-                                className="form-input"
+                                className={styles.formInput}
                                 type="text"
                                 required
                                 placeholder="E.g. Approved for Phase 1 funding release"
                                 value={formData.recommendation}
                                 onChange={e => setFormData({...formData, recommendation: e.target.value})}
-                                style={{background: 'var(--color-bg-light)', border: '2px solid rgba(0,0,0,0.05)'}}
                             />
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label" style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                <Camera size={18} /> Photographic Evidence URL
+                        <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>
+                                <Camera size={18} /> Photographic Proof URL
                             </label>
                             <input 
-                                className="form-input"
+                                className={styles.formInput}
                                 type="url"
                                 placeholder="Link to timestamped on-ground photo"
                                 value={formData.image_url}
                                 onChange={e => setFormData({...formData, image_url: e.target.value})}
-                                style={{background: 'var(--color-bg-light)', border: '2px solid rgba(0,0,0,0.05)'}}
                             />
-                            <p style={{fontSize: '0.8rem', color: 'var(--color-text-secondary)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '6px'}}>
-                                <AlertTriangle size={14} color="var(--color-primary)" /> Requirement: Ensure beneficiary or landmark is visible.
+                            <p style={{fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                <AlertTriangle size={16} color="var(--color-primary)" /> 
+                                Requirement: Ensure beneficiary or landmark is clearly visible.
                             </p>
                         </div>
 
-                        <div style={{marginTop: '40px', display: 'flex', gap: '16px'}}>
+                        <div style={{marginTop: '48px', display: 'flex', gap: '20px'}}>
                             <button 
                                 type="submit" 
                                 className="btn-primary" 
-                                style={{flex: 2, height: '56px', fontSize: '1.1rem'}}
+                                style={{flex: 2, height: '60px', fontSize: '1.15rem'}}
                                 disabled={submitting}
                             >
-                                {submitting ? <Loader2 className="animate-spin" /> : <><Send size={20} style={{marginRight: '12px'}} /> Submit Formal Audit</>}
+                                {submitting ? <Loader2 className="animate-spin" /> : <><Send size={22} style={{marginRight: '12px'}} /> Submit Audit Report</>}
                             </button>
                             <button 
                                 type="button" 
                                 className="btn-secondary"
                                 onClick={() => navigate(-1)}
-                                style={{flex: 1, height: '56px'}}
+                                style={{flex: 1, height: '60px'}}
                             >
-                                Back
+                                Cancel
                             </button>
                         </div>
                     </form>

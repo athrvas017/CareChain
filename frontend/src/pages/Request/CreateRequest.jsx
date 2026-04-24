@@ -52,10 +52,10 @@ const CreateRequest = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    <div className="form-group">
-                        <label className="form-label"><FileText size={16} /> Request Title</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Request Title</label>
                         <input 
-                            className="form-input"
+                            className={styles.formInput}
                             type="text" 
                             required 
                             placeholder="Brief title of your need"
@@ -65,10 +65,10 @@ const CreateRequest = () => {
                     </div>
 
                     <div className={styles.grid}>
-                        <div className="form-group">
-                            <label className="form-label"><Tag size={16} /> Category</label>
+                        <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>Category</label>
                             <select 
-                                className="form-input"
+                                className={styles.formInput}
                                 value={formData.category}
                                 onChange={e => setFormData({...formData, category: e.target.value})}
                             >
@@ -79,10 +79,10 @@ const CreateRequest = () => {
                                 <option>Small Business</option>
                             </select>
                         </div>
-                        <div className="form-group">
-                            <label className="form-label"><MapPin size={16} /> Location</label>
+                        <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>Location</label>
                             <input 
-                                className="form-input"
+                                className={styles.formInput}
                                 type="text" 
                                 required 
                                 placeholder="City, Region"
@@ -92,22 +92,21 @@ const CreateRequest = () => {
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label className="form-label">Description (Detailed Need)</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Detailed Description</label>
                         <textarea 
-                            className="form-input"
+                            className={styles.formInput}
                             required 
-                            rows="4" 
                             placeholder="Explain your situation in detail. Who needs help, and why is it urgent?"
                             value={formData.description}
                             onChange={e => setFormData({...formData, description: e.target.value})}
                         ></textarea>
                     </div>
 
-                    <div className="form-group">
-                        <label className="form-label"><ImageIcon size={16} /> Support Image URL</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Support Image URL</label>
                         <input 
-                            className="form-input"
+                            className={styles.formInput}
                             type="url" 
                             placeholder="Link to a supportive image or document"
                             value={formData.image_url}
@@ -116,8 +115,8 @@ const CreateRequest = () => {
                         <span className={styles.hint}>Recommended: Medical documents or site photos.</span>
                     </div>
 
-                    <button type="submit" className="btn-primary" style={{width: '100%', marginTop: '24px'}} disabled={loading}>
-                        {loading ? <Loader2 className={styles.spin} /> : <><Send size={18} /> Submit Request</>}
+                    <button type="submit" className="btn-primary" style={{width: '100%', marginTop: '32px', height: '56px', fontSize: '1.1rem'}} disabled={loading}>
+                        {loading ? <Loader2 className={styles.spin} /> : <><Send size={20} style={{marginRight: '12px'}} /> Submit Request</>}
                     </button>
                 </form>
             </div>

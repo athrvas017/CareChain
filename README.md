@@ -29,7 +29,7 @@ ChainCare transforms traditional donation models into a verifiable data-driven e
 ChainCare is more than just a donation site; it is a **Centralized Verification & Allocation Hub**.
 
 ### 🎨 Premium User Experience
-The website is built with a **modern Glassmorphism design system**, utilizing translucent layers and vibrant accents to create a premium, trustworthy feel. Key UI features include:
+The website is built with a **clean, modern design system**, utilizing solid surfaces and vibrant accents to create a premium, trustworthy feel. Key UI features include:
 - **Interactive Heatmaps**: Real-time visualization of high-priority zones using Leaflet.js.
 - **Impact Dashboards**: Data-rich environments for all users to track progress through Recharts and Chart.js.
 - **Mobile-Responsive Workflows**: Field workers can submit verification reports directly from their mobile devices while on-site.
@@ -79,7 +79,7 @@ The platform's intelligence layer identifies "High-Need Hotspots" to guide admin
 
 ### Frontend
 - **React 19 (Vite)**: High-performance component-based UI.
-- **CSS Modules**: Scoped styling using a custom Glassmorphism theme.
+- **CSS Modules**: Scoped styling using a custom clean design theme.
 - **Data Visualization**: Recharts, Chart.js, and Leaflet.js for interactive mapping.
 - **Lucide Icons**: Consistent, modern iconography.
 

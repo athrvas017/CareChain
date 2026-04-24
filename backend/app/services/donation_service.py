@@ -39,7 +39,15 @@ def donate_to_campaign(db: Session, user_id: int, data: DonationCreate):
 
     return donation
 def get_user_donations(db: Session, user_id: int):
-    donations = db.query(Donation).filter(Donation.donor_id == user_id).all()
+    # Join with Campaign to check status
+    from app.models.campaign import Campaign
+    donations = (
+        db.query(Donation)
+        .join(Campaign, Donation.campaign_id == Campaign.id)
+        .filter(Donation.donor_id == user_id)
+        .filter(Campaign.status != "rejected")
+        .all()
+    )
     for donation in donations:
         campaign = db.query(Campaign).filter(Campaign.id == donation.campaign_id).first()
         if campaign:

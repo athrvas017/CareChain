@@ -180,12 +180,12 @@ const DashboardAdmin = () => {
           </div>
           
           <div className={styles.hotspotLegend} style={{width: '320px', display: 'flex', flexDirection: 'column', gap: '14px'}}>
-             <h4 style={{fontSize: '0.9rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '10px'}}>
+             <h4 style={{fontSize: '0.9rem', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: '10px'}}>
                <MapIcon size={18} /> Impact Hotspots
              </h4>
              {hotspots.slice(0, 5).map((h, i) => (
-                <div key={i} className={styles.hotspotItem} style={{padding: '16px', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '12px', borderLeft: `5px solid ${h.hotspot_score > 0.7 ? 'var(--error)' : 'var(--primary)'}`}}>
-                  <p style={{fontSize: '0.875rem', fontWeight: 600, margin: 0, color: '#fff'}}>{h.title}</p>
+                <div key={i} className={styles.hotspotItem} style={{padding: '16px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '12px', borderLeft: `5px solid ${h.hotspot_score > 0.7 ? 'var(--error)' : 'var(--primary)'}`}}>
+                  <p style={{fontSize: '0.875rem', fontWeight: 600, margin: 0, color: 'var(--color-text-primary)'}}>{h.title}</p>
                   <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '6px'}}>
                     <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>{h.city}</span>
                     <span style={{fontSize: '0.75rem', fontWeight: 800, color: h.hotspot_score > 0.7 ? 'var(--error)' : 'var(--primary)'}}>
@@ -316,18 +316,18 @@ const DashboardAdmin = () => {
         <div className={styles.rightColumn}>
           <div className={`glass-card ${styles.card}`} style={{padding: '32px'}}>
             <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} style={{color: '#fff'}}>Real-Time Transactions</h2>
+              <h2 className={styles.sectionTitle} style={{color: 'var(--color-text-primary)'}}>Real-Time Transactions</h2>
               <p className={styles.sectionSubtitle}>Monitoring global capital flow into verified causes.</p>
             </div>
             
             <div className={styles.historyList} style={{marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '16px'}}>
               {recentDonations.map((don, idx) => (
-                <div key={idx} className={styles.historyItem} style={{display: 'flex', alignItems: 'center', gap: '16px', padding: '16px', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '16px'}}>
+                <div key={idx} className={styles.historyItem} style={{display: 'flex', alignItems: 'center', gap: '16px', padding: '16px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '16px'}}>
                   <div className={styles.historyIcon} style={{background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)', padding: '10px', borderRadius: '12px'}}>
                     <Heart size={20} />
                   </div>
                   <div className={styles.historyContent} style={{flex: 1}}>
-                    <p style={{fontSize: '0.9rem', fontWeight: 700, color: '#fff'}}>Contribution #{don.id}</p>
+                    <p style={{fontSize: '0.9rem', fontWeight: 700, color: 'var(--color-text-primary)'}}>Contribution #{don.id}</p>
                     <p style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>{new Date(don.created_at).toLocaleDateString()}</p>
                   </div>
                   <div className={styles.historyAmountWrapper} style={{textAlign: 'right'}}>

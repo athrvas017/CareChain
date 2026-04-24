@@ -39,4 +39,7 @@ def get_my_requests(
 
 @router.get("/", response_model=list[AidRequestResponse])
 def get_all_requests(db: Session = Depends(get_db)):
-    return db.query(AidRequest).all()
+    """
+    Returns only verified aid requests for the public/donors.
+    """
+    return db.query(AidRequest).filter(AidRequest.status == "verified").all()

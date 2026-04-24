@@ -48,7 +48,12 @@ def update_campaign_status(campaign_id: int, status: str, db: Session = Depends(
 # 💰 Transaction Monitoring
 @router.get("/donations", response_model=list[DonationResponse])
 def get_all_donations(db: Session = Depends(get_db), admin: User = Depends(require_role(["admin"]))):
-    return db.query(Donation).all()
+    return (
+        db.query(Donation)
+        .join(Campaign, Donation.campaign_id == Campaign.id)
+        .filter(Campaign.status != "rejected")
+        .all()
+    )
 
 # 📊 Basic Insights
 @router.get("/insights/summary")

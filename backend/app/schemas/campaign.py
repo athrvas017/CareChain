@@ -6,6 +6,7 @@ class CampaignBase(BaseModel):
     title: str
     description: Optional[str]
     category: str
+    city: Optional[str] = None
     goal_amount: float
 
 
